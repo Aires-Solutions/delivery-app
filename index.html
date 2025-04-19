@@ -1,885 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickBite - Food & Grocery Delivery</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./css/style.css">
-</head>
-<body class="gradient-bg min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-4">
-                    <div class="text-2xl font-bold text-indigo-600">QuickBite</div>
-                    <div class="hidden md:flex items-center space-x-1">
-                        <a href="#" class="py-2 px-3 text-gray-700 hover:text-indigo-600 transition">Home</a>
-                        <a href="#restaurants" class="py-2 px-3 text-gray-700 hover:text-indigo-600 transition">Restaurants</a>
-                        <a href="#groceries" class="py-2 px-3 text-gray-700 hover:text-indigo-600 transition">Groceries</a>
-                        <a href="#stores" class="py-2 px-3 text-gray-700 hover:text-indigo-600 transition">Nearby Stores</a>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button onclick="toggleCart()" class="relative p-2 text-gray-700 hover:text-indigo-600">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                        <span id="cart-count" class="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                    </button>
-                    <button id="auth-btn" onclick="toggleAuthModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">Login</button>
-                    <button class="md:hidden p-2 text-gray-700" onclick="toggleMobileMenu()">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white px-4 pb-4">
-            <a href="#" class="block py-2 text-gray-700 hover:text-indigo-600 transition">Home</a>
-            <a href="#restaurants" class="block py-2 text-gray-700 hover:text-indigo-600 transition">Restaurants</a>
-            <a href="#groceries" class="block py-2 text-gray-700 hover:text-indigo-600 transition">Groceries</a>
-            <a href="#stores" class="block py-2 text-gray-700 hover:text-indigo-600 transition">Nearby Stores</a>
-        </div>
-    </nav>
+<html class="dark"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Discover amazing ML apps made by the community">
+    <meta property="fb:app_id" content="1321688464574422">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@huggingface">
+    <meta name="twitter:image" content="https://cdn-thumbnails.huggingface.co/social-thumbnails/spaces/SimpleSam/grocery-app.png">
+    <meta property="og:title" content="grocery-app - a Hugging Face Space by SimpleSam">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://huggingface.co/spaces/SimpleSam/grocery-app">
+    <meta property="og:image" content="https://cdn-thumbnails.huggingface.co/social-thumbnails/spaces/SimpleSam/grocery-app.png">
 
-    <!-- Hero Section -->
-    <section class="py-16 px-4">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 mb-8 md:mb-0">
-                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Food & Groceries Delivered to Your Door</h1>
-                    <p class="text-lg text-gray-600 mb-6">Order from your favorite restaurants and grocery stores with just a few taps.</p>
-                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                        <button class="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition">Order Now</button>
-                        <button class="border border-indigo-600 text-indigo-600 px-6 py-3 rounded-md hover:bg-indigo-50 transition">Download App</button>
-                    </div>
-                </div>
-                <div class="md:w-1/2">
-                    <img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Food delivery" class="rounded-lg shadow-xl w-full">
-                </div>
-            </div>
-        </div>
-    </section>
+    <link rel="stylesheet" href="/front/build/kube-e130e7f/style.css">
 
-    <!-- Search Section -->
-    <section class="py-8 px-4 bg-white">
-        <div class="max-w-6xl mx-auto">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                    <div class="flex-1 relative">
-                        <input type="text" placeholder="Search for restaurants or groceries..." class="w-full p-4 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                    <div class="relative w-full md:w-auto">
-                        <select class="w-full p-4 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option>All Categories</option>
-                            <option>Restaurants</option>
-                            <option>Groceries</option>
-                            <option>Pharmacies</option>
-                        </select>
-                        <i class="fas fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
-                    </div>
-                    <button class="w-full md:w-auto bg-indigo-600 text-white px-6 py-4 rounded-lg hover:bg-indigo-700 transition">Search</button>
-                </div>
-            </div>
-        </div>
-    </section>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&amp;display=swap" rel="stylesheet">
 
-    <!-- Restaurants Section -->
-    <section id="restaurants" class="py-12 px-4">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8">Popular Restaurants</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Restaurant Card 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden food-card transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Restaurant" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <div class="flex justify-between items-start">
-                            <h3 class="text-xl font-semibold text-gray-800">Gourmet Haven</h3>
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">4.8 ★</span>
-                        </div>
-                        <p class="text-gray-600 mt-1">Italian, Mediterranean</p>
-                        <div class="flex items-center mt-2 text-yellow-500">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <div class="mt-4 flex justify-between items-center">
-                            <span class="text-gray-700">$10 - $30</span>
-                            <button onclick="addToCart('Margherita Pizza', 12.99, 'Gourmet Haven')" class="bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Restaurant Card 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden food-card transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Restaurant" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <div class="flex justify-between items-start">
-                            <h3 class="text-xl font-semibold text-gray-800">Spice Kingdom</h3>
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">4.5 ★</span>
-                        </div>
-                        <p class="text-gray-600 mt-1">Indian, Asian</p>
-                        <div class="flex items-center mt-2 text-yellow-500">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <div class="mt-4 flex justify-between items-center">
-                            <span class="text-gray-700">$8 - $25</span>
-                            <button onclick="addToCart('Butter Chicken', 14.99, 'Spice Kingdom')" class="bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Restaurant Card 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden food-card transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Restaurant" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <div class="flex justify-between items-start">
-                            <h3 class="text-xl font-semibold text-gray-800">Burger Junction</h3>
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">4.7 ★</span>
-                        </div>
-                        <p class="text-gray-600 mt-1">American, Fast Food</p>
-                        <div class="flex items-center mt-2 text-yellow-500">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <div class="mt-4 flex justify-between items-center">
-                            <span class="text-gray-700">$5 - $20</span>
-                            <button onclick="addToCart('Classic Cheeseburger', 8.99, 'Burger Junction')" class="bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8 text-center">
-                <button class="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-md hover:bg-indigo-50 transition">View All Restaurants</button>
-            </div>
-        </div>
-    </section>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" />
+    </noscript>
 
-    <!-- Groceries Section -->
-    <section id="groceries" class="py-12 px-4 bg-gray-50">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8">Fresh Groceries</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                <!-- Grocery Item 1 -->
-                <div class="bg-white rounded-lg shadow-md p-4 text-center food-card transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1589927986089-35812388d1b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Apples" class="w-full h-32 object-contain mb-3">
-                    <h3 class="font-medium text-gray-800">Fresh Apples</h3>
-                    <p class="text-indigo-600 font-semibold mt-1">$2.99/lb</p>
-                    <button onclick="addToCart('Fresh Apples', 2.99, 'QuickMart')" class="mt-2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Add to Cart</button>
-                </div>
-                
-                <!-- Grocery Item 2 -->
-                <div class="bg-white rounded-lg shadow-md p-4 text-center food-card transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1573246123716-6b1782bfd499?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1370&q=80" alt="Milk" class="w-full h-32 object-contain mb-3">
-                    <h3 class="font-medium text-gray-800">Organic Milk</h3>
-                    <p class="text-indigo-600 font-semibold mt-1">$4.49</p>
-                    <button onclick="addToCart('Organic Milk', 4.49, 'QuickMart')" class="mt-2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Add to Cart</button>
-                </div>
-                
-                <!-- Grocery Item 3 -->
-                <div class="bg-white rounded-lg shadow-md p-4 text-center food-card transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1603569283847-aa6ba8a8a022?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Bread" class="w-full h-32 object-contain mb-3">
-                    <h3 class="font-medium text-gray-800">Whole Wheat Bread</h3>
-                    <p class="text-indigo-600 font-semibold mt-1">$3.29</p>
-                    <button onclick="addToCart('Whole Wheat Bread', 3.29, 'QuickMart')" class="mt-2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Add to Cart</button>
-                </div>
-                
-                <!-- Grocery Item 4 -->
-                <div class="bg-white rounded-lg shadow-md p-4 text-center food-card transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1576186726115-4d51596775d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Eggs" class="w-full h-32 object-contain mb-3">
-                    <h3 class="font-medium text-gray-800">Free Range Eggs</h3>
-                    <p class="text-indigo-600 font-semibold mt-1">$5.99/dozen</p>
-                    <button onclick="addToCart('Free Range Eggs', 5.99, 'QuickMart')" class="mt-2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Add to Cart</button>
-                </div>
-                
-                <!-- Grocery Item 5 -->
-                <div class="bg-white rounded-lg shadow-md p-4 text-center food-card transition duration-300">
-                    <img src="https://images.unsplash.com/photo-1603048719535-4b6b68c23805?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Chicken" class="w-full h-32 object-contain mb-3">
-                    <h3 class="font-medium text-gray-800">Boneless Chicken</h3>
-                    <p class="text-indigo-600 font-semibold mt-1">$7.99/lb</p>
-                    <button onclick="addToCart('Boneless Chicken', 7.99, 'QuickMart')" class="mt-2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Add to Cart</button>
-                </div>
-            </div>
-            <div class="mt-8 text-center">
-                <button class="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-md hover:bg-indigo-50 transition">Browse All Groceries</button>
-            </div>
-        </div>
-    </section>
+    <script>const guestTheme = document.cookie.match(/theme=(\w+)/)?.[1]; document.documentElement.classList.toggle('dark', guestTheme === 'dark' || ( (!guestTheme || guestTheme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches));</script><style type="text/css" id="operaUserStyle">
+video {
+filter: -opera-shader(url(data:text/plain;base64,Ly8gaHR0cHM6Ly9naXRodWIuY29tL0dQVU9wZW4tRWZmZWN0cy9GaWRlbGl0eUZYLUNBUwovLyB2MwoKdW5pZm9ybSBzaGFkZXIgaUNodW5rOwp1bmlmb3JtIGZsb2F0MiBpQ2h1bmtTaXplOwp1bmlmb3JtIGZsb2F0MiBpTW91c2U7CnVuaWZvcm0gZmxvYXQgaUFyZ3NbMV07Cgpjb25zdCBmbG9hdCBFUFNJT04gPSAwLjE7CmNvbnN0IGZsb2F0IFZfTUlOID0gMDsKY29uc3QgZmxvYXQgVl9MT1cgPSAwLjI1Owpjb25zdCBmbG9hdCBWX01FRCA9IDAuNTsKY29uc3QgZmxvYXQgVl9ISUdIID0gMC43NTsKY29uc3QgZmxvYXQgVl9NQVggPSAxOwoKY29uc3QgZmxvYXQgVEhSRVNIT0xEX0FSRUEgPSA4MDAgKiA2MDA7CmNvbnN0IGZsb2F0IE1JTl9BUkVBID0gNDAwICogMTAwOwpjb25zdCBmbG9hdCBNSU5fU1RSSVAgPSAyMDsKY29uc3QgZmxvYXQgTUFSR0lOID0gMTsKCmZsb2F0MyBwaXhlbChpbnQgeCwgaW50IHksIGZsb2F0MiB4eSkgewogICAgcmV0dXJuIGlDaHVuay5ldmFsKHh5ICsgZmxvYXQyKHgsIHkpKS5yZ2I7Cn0KCmZsb2F0MyBzaGFycGVuKGZsb2F0MiB4eSkgewogICAgZmxvYXQzIGYgPQogICAgICAgIHBpeGVsKC0xLCAtMSwgeHkpICogIDEgKwogICAgICAgIHBpeGVsKCAwLCAtMSwgeHkpICogLTEgKwogICAgICAgIHBpeGVsKCAxLCAtMSwgeHkpICogIDEgKwoKICAgICAgICBwaXhlbCgtMSwgMCwgeHkpICogLTEgICsKICAgICAgICBwaXhlbCggMCwgMCwgeHkpICogLTEgICsKICAgICAgICBwaXhlbCggMSwgMCwgeHkpICogLTEgICsKCiAgICAgICAgcGl4ZWwoLTEsIDEsIHh5KSAqIDEgICArCiAgICAgICAgcGl4ZWwoIDAsIDEsIHh5KSAqIC0xICArCiAgICAgICAgcGl4ZWwoIDEsIDEsIHh5KSAqIDE7CiAgICByZXR1cm4gZiAvIC0xOwp9CgpmbG9hdDQgUkdYMihmbG9hdDIgeHkpIHsKICAgIGZsb2F0NCBjb2xvciA9IGlDaHVuay5ldmFsKHh5KTsKCiAgICBpZiAoaUNodW5rU2l6ZS54ICogaUNodW5rU2l6ZS55IDwgTUlOX0FSRUEpIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgaWYgKGlDaHVua1NpemUueSA8IE1JTl9TVFJJUCB8fCBpQ2h1bmtTaXplLnggPCBNSU5fU1RSSVApIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgaWYgKHh5LnggPCBNQVJHSU4gfHwgeHkueCA+IChpQ2h1bmtTaXplLnggLSBNQVJHSU4pIHx8CiAgICAgICAgeHkueSA8IE1BUkdJTiB8fCB4eS55ID4gKGlDaHVua1NpemUueSAtIE1BUkdJTikpIHsKICAgICAgICByZXR1cm4gY29sb3I7CiAgICB9CgogICAgcmV0dXJuIGZsb2F0NChzaGFycGVuKHh5KSwgMSk7Cn0KCmZsb2F0IG1pbjMoZmxvYXQgeCwgZmxvYXQgeSwgZmxvYXQgeikgewogICAgcmV0dXJuIG1pbih4LCBtaW4oeSwgeikpOwp9CgpmbG9hdCBtYXgzKGZsb2F0IHgsIGZsb2F0IHksIGZsb2F0IHopIHsKICAgIHJldHVybiBtYXgoeCwgbWF4KHksIHopKTsKfQoKZmxvYXQgcmNwKGZsb2F0IHYpIHsKICAgIHJldHVybiAxIC8gdjsKfQoKZmxvYXQzIFJHWDMoZmxvYXQyIHh5LCBmbG9hdCBzdHJlbmd0aCkgewogICAgZmxvYXQzIGEgPSBwaXhlbCgtMSwgLTEsIHh5KTsKICAgIGZsb2F0MyBiID0gcGl4ZWwoIDAsIC0xLCB4eSk7CiAgICBmbG9hdDMgYyA9IHBpeGVsKCAxLCAtMSwgeHkpOwoKICAgIGZsb2F0MyBkID0gcGl4ZWwoLTEsIDAsIHh5KTsKICAgIGZsb2F0MyBlID0gcGl4ZWwoIDAsIDAsIHh5KTsKICAgIGZsb2F0MyBmID0gcGl4ZWwoIDEsIDAsIHh5KTsKCiAgICBmbG9hdDMgZyA9IHBpeGVsKC0xLCAxLCB4eSk7CiAgICBmbG9hdDMgaCA9IHBpeGVsKCAwLCAxLCB4eSk7CiAgICBmbG9hdDMgaSA9IHBpeGVsKCAxLCAxLCB4eSk7CgogICAgZmxvYXQgbW5SID0gbWluMyhtaW4zKGQuciwgZS5yLCBmLnIpLCBiLnIsIGgucik7CiAgICBmbG9hdCBtbkcgPSBtaW4zKG1pbjMoZC5nLCBlLmcsIGYuZyksIGIuZywgaC5nKTsKICAgIGZsb2F0IG1uQiA9IG1pbjMobWluMyhkLmIsIGUuYiwgZi5iKSwgYi5iLCBoLmIpOwoKICAgIGZsb2F0IG1uUjIgPSBtaW4zKG1pbjMobW5SLCBhLnIsIGMuciksIGcuciwgaS5yKTsKICAgIGZsb2F0IG1uRzIgPSBtaW4zKG1pbjMobW5HLCBhLmcsIGMuZyksIGcuZywgaS5nKTsKICAgIGZsb2F0IG1uQjIgPSBtaW4zKG1pbjMobW5CLCBhLmIsIGMuYiksIGcuYiwgaS5iKTsKCiAgICBtblIgPSBtblIgKyBtblIyOwogICAgbW5HID0gbW5HICsgbW5HMjsKICAgIG1uQiA9IG1uQiArIG1uQjI7CgogICAgZmxvYXQgbXhSID0gbWF4MyhtYXgzKGQuciwgZS5yLCBmLnIpLCBiLnIsIGgucik7CiAgICBmbG9hdCBteEcgPSBtYXgzKG1heDMoZC5nLCBlLmcsIGYuZyksIGIuZywgaC5nKTsKICAgIGZsb2F0IG14QiA9IG1heDMobWF4MyhkLmIsIGUuYiwgZi5iKSwgYi5iLCBoLmIpOwoKICAgIGZsb2F0IG14UjIgPSBtYXgzKG1heDMobXhSLCBhLnIsIGMuciksIGcuciwgaS5yKTsKICAgIGZsb2F0IG14RzIgPSBtYXgzKG1heDMobXhHLCBhLmcsIGMuZyksIGcuZywgaS5nKTsKICAgIGZsb2F0IG14QjIgPSBtYXgzKG1heDMobXhCLCBhLmIsIGMuYiksIGcuYiwgaS5iKTsKCiAgICBteFIgPSBteFIgKyBteFIyOwogICAgbXhHID0gbXhHICsgbXhHMjsKICAgIG14QiA9IG14QiArIG14QjI7CgogICAgZmxvYXQgcmNwTVIgPSByY3AobXhSKTsKICAgIGZsb2F0IHJjcE1HID0gcmNwKG14Ryk7CiAgICBmbG9hdCByY3BNQiA9IHJjcChteEIpOwoKICAgIGZsb2F0IGFtcFIgPSBzYXR1cmF0ZShtaW4obW5SLCAyIC0gbXhSKSAqIHJjcE1SKTsKICAgIGZsb2F0IGFtcEcgPSBzYXR1cmF0ZShtaW4obW5HLCAyIC0gbXhHKSAqIHJjcE1HKTsKICAgIGZsb2F0IGFtcEIgPSBzYXR1cmF0ZShtaW4obW5CLCAyIC0gbXhCKSAqIHJjcE1CKTsKCiAgICBhbXBSID0gc3FydChhbXBSKTsKICAgIGFtcEcgPSBzcXJ0KGFtcEcpOwogICAgYW1wQiA9IHNxcnQoYW1wQik7CgogICAgZmxvYXQgcGVhayA9IC1yY3AobWl4KDgsIDUsIHN0cmVuZ3RoKSk7CgogICAgZmxvYXQgd1IgPSBhbXBSICogcGVhazsKICAgIGZsb2F0IHdHID0gYW1wRyAqIHBlYWs7CiAgICBmbG9hdCB3QiA9IGFtcEIgKiBwZWFrOwoKICAgIGZsb2F0IHJjcFdlaWdodFIgPSByY3AoMSArIDQgKiB3Uik7CiAgICBmbG9hdCByY3BXZWlnaHRHID0gcmNwKDEgKyA0ICogd0cpOwogICAgZmxvYXQgcmNwV2VpZ2h0QiA9IHJjcCgxICsgNCAqIHdCKTsKCiAgICByZXR1cm4gZmxvYXQzKAogICAgICAgIHNhdHVyYXRlKChiLnIgKiB3UiArIGQuciAqIHdSICsgZi5yICogd1IgKyBoLnIgKiB3UiArIGUucikgKiByY3BXZWlnaHRSKSwKICAgICAgICBzYXR1cmF0ZSgoYi5nICogd0cgKyBkLmcgKiB3RyArIGYuZyAqIHdHICsgaC5nICogd0cgKyBlLmcpICogcmNwV2VpZ2h0RyksCiAgICAgICAgc2F0dXJhdGUoKGIuYiAqIHdCICsgZC5iICogd0IgKyBmLmIgKiB3QiArIGguYiAqIHdCICsgZS5iKSAqIHJjcFdlaWdodEIpKTsKfQoKCmZsb2F0NCBtYWluKGZsb2F0MiB4eSkgewoKICAgIGZsb2F0NCBvcmlnaW5hbENvbG9yID0gaUNodW5rLmV2YWwoeHkpOwogICAgaWYgKG9yaWdpbmFsQ29sb3IuYSA8IDEpIHsKICAgICAgICByZXR1cm4gaUNodW5rLmV2YWwoeHkpOwogICAgfQoKICAgIGZsb2F0IGludGVuc2l0eSA9IGlBcmdzWzBdOwogICAgZmxvYXQgc3RyZW5ndGggPSAwOwogICAgZmxvYXQzIGNvbG9yOwoKICAgIGlmIChpbnRlbnNpdHkgPCBWX01JTiArIEVQU0lPTikgewogICAgICAgIHN0cmVuZ3RoID0gMC4xMDsKICAgICAgICBjb2xvciA9IFJHWDMoeHksIHN0cmVuZ3RoKTsKCiAgICB9IGVsc2UgaWYgKGludGVuc2l0eSA+IFZfTE9XIC0gRVBTSU9OICYmIGludGVuc2l0eSA8IFZfTE9XICsgRVBTSU9OKSB7CiAgICAgICAgc3RyZW5ndGggPSAwLjMzOwogICAgICAgIGNvbG9yID0gUkdYMyh4eSwgc3RyZW5ndGgpOwoKICAgIH0gZWxzZSBpZiAoaW50ZW5zaXR5ID4gVl9NRUQgLSBFUFNJT04gJiYgaW50ZW5zaXR5IDwgVl9NRUQgKyBFUFNJT04pIHsKICAgICAgICBzdHJlbmd0aCA9IDAuNTsKICAgICAgICBjb2xvciA9IFJHWDMoeHksIHN0cmVuZ3RoKTsKCiAgICB9IGVsc2UgaWYgKGludGVuc2l0eSA+IFZfSElHSCAtIEVQU0lPTiAmJiBpbnRlbnNpdHkgPCBWX0hJR0ggKyBFUFNJT04pIHsKICAgICAgICBzdHJlbmd0aCA9IDAuOTk7CiAgICAgICAgY29sb3IgPSBSR1gzKHh5LCBzdHJlbmd0aCk7CgogICAgfSBlbHNlIGlmIChpbnRlbnNpdHkgPiBWX01BWCAtIEVQU0lPTikgewogICAgICAgIHN0cmVuZ3RoID0gMTsKICAgICAgICBjb2xvciA9IFJHWDIoeHkpLnJnYjsKICAgIH0KCiAgICByZXR1cm4gZmxvYXQ0KGNvbG9yLCBvcmlnaW5hbENvbG9yLmEpOwp9) -opera-args(1.00 255 255 255));
+}
+</style>
+<link rel="canonical" href="https://huggingface.co/spaces/SimpleSam/grocery-app"> <script type="application/ld+json">{
+"@context": "https:\/\/schema.org",
+"@type": "WebApplication",
+"name": "grocery-app",
+"identifier": "SimpleSam\/grocery-app",
+"creator": {
+"@type": "Person",
+"name": "Samson Kipkorir Sang",
+"url": "https:\/\/huggingface.co\/SimpleSam"
+},
+"applicationCategory": "AIApplication",
+"sameAs": "simplesam-grocery-app",
+"url": "https:\/\/huggingface.co\/spaces\/SimpleSam\/grocery-app",
+"operatingSystem": "Web"
+}</script> 
 
-    <!-- Nearby Stores Section -->
-    <section id="stores" class="py-12 px-4">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8">Nearby Stores</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Map Section -->
-                <div class="map-container">
-                    <div class="map-placeholder">
-                        <div class="text-center">
-                            <i class="fas fa-map-marker-alt text-4xl mb-2"></i>
-                            <p>Interactive map showing nearby stores</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Store List -->
-                <div>
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-4">
-                        <div class="p-4 flex items-center">
-                            <img src="https://images.unsplash.com/photo-1601593763799-41a03c5c5393?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="QuickMart" class="w-16 h-16 object-cover rounded-md">
-                            <div class="ml-4 flex-1">
-                                <h3 class="font-semibold text-gray-800">QuickMart</h3>
-                                <p class="text-sm text-gray-600">0.5 miles away • Groceries, Household</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 text-sm">4.4 ★</span>
-                                    <span class="mx-2 text-gray-300">•</span>
-                                    <span class="text-sm text-gray-600">15-30 min delivery</span>
-                                </div>
-                            </div>
-                            <button class="bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Shop Now</button>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-4">
-                        <div class="p-4 flex items-center">
-                            <img src="https://images.unsplash.com/photo-1604719312566-8912e4227c9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="FreshMarket" class="w-16 h-16 object-cover rounded-md">
-                            <div class="ml-4 flex-1">
-                                <h3 class="font-semibold text-gray-800">FreshMarket</h3>
-                                <p class="text-sm text-gray-600">1.2 miles away • Organic, Produce</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 text-sm">4.7 ★</span>
-                                    <span class="mx-2 text-gray-300">•</span>
-                                    <span class="text-sm text-gray-600">20-40 min delivery</span>
-                                </div>
-                            </div>
-                            <button class="bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Shop Now</button>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div class="p-4 flex items-center">
-                            <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="PharmaPlus" class="w-16 h-16 object-cover rounded-md">
-                            <div class="ml-4 flex-1">
-                                <h3 class="font-semibold text-gray-800">PharmaPlus</h3>
-                                <p class="text-sm text-gray-600">0.8 miles away • Pharmacy, Essentials</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-yellow-500 text-sm">4.3 ★</span>
-                                    <span class="mx-2 text-gray-300">•</span>
-                                    <span class="text-sm text-gray-600">25-45 min delivery</span>
-                                </div>
-                            </div>
-                            <button class="bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition">Shop Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <title>grocery-app - a Hugging Face Space by SimpleSam</title>
 
-    <!-- How It Works Section -->
-    <section class="py-12 px-4 bg-gray-50">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">How It Works</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-store text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">1. Choose Store</h3>
-                    <p class="text-gray-600">Browse restaurants and grocery stores near you</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-utensils text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">2. Select Items</h3>
-                    <p class="text-gray-600">Add your favorite food or groceries to your cart</p>
-                </div>
-                <div class="text-center">
-                    <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-truck text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">3. Fast Delivery</h3>
-                    <p class="text-gray-600">Track your order as it's prepared and delivered</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <script defer="" data-domain="huggingface.co" event-loggedin="true" src="/js/script.pageview-props.js"></script>
+    <script>
+        window.plausible =
+            window.plausible ||
+            function () {
+                (window.plausible.q = window.plausible.q || []).push(arguments);
+            };
+    </script>
+    <script>
+        window.hubConfig = {"features":{"signupDisabled":false},"sshGitUrl":"git@hf.co","moonHttpUrl":"https:\/\/huggingface.co","captchaApiKey":"bd5f2066-93dc-4bdd-a64b-a24646ca3859","captchaDisabledOnSignup":true,"datasetViewerPublicUrl":"https:\/\/datasets-server.huggingface.co","stripePublicKey":"pk_live_x2tdjFXBCvXo2FFmMybezpeM00J6gPCAAc","environment":"production","userAgent":"HuggingFace (production)","spacesIframeDomain":"hf.space","spacesApiUrl":"https:\/\/api.hf.space","docSearchKey":"ece5e02e57300e17d152c08056145326e90c4bff3dd07d7d1ae40cf1c8d39cb6","logoDev":{"apiUrl":"https:\/\/img.logo.dev\/","apiKey":"pk_UHS2HZOeRnaSOdDp7jbd5w"}};
+    </script>
+    <script type="text/javascript" src="https://de5282c3ca0c.edge.sdk.awswaf.com/de5282c3ca0c/526cf06acb0d/challenge.js" defer=""></script> <script type="text/javascript">window.ddjskey = '16C098F83400FA687F6EDB0A51A149'; window.ddoptions = { overrideAbortFetch: false };</script><script type="text/javascript" src="https://dd.huggingface.co/tags.js" async=""></script>
+<script src="https://js.stripe.com/v3/" async=""></script><style type="text/css">:root [href^="//mage98rquewz.com/"], :root [href^="//x4pollyxxpush.com/"], :root span[id^="ezoic-pub-ad-placeholder-"], :root ins.adsbygoogle[data-ad-slot], :root ins.adsbygoogle[data-ad-client], :root img[src^="https://s-img.adskeeper.com/"], :root guj-ad, :root gpt-ad, :root div[id^="zergnet-widget"], :root div[id^="vuukle-ad-"], :root div[id^="taboola-stream-"], :root div[id^="sticky_ad_"], :root div[id^="st"][style^="z-index: 999999999;"], :root div[id^="gpt_ad_"], :root div[id^="ezoic-pub-ad-"], :root div[id^="dfp-ad-"], :root div[id^="crt-"][style], :root div[id^="adspot-"], :root div[id^="adrotate_widgets-"], :root ps-connatix-module, :root div[id^="ad_position_"], :root div[id^="ad-div-"], :root div[id*="ScriptRoot"], :root div[id*="MarketGid"], :root div[data-id-advertdfpconf], :root div[data-dfp-id], :root hl-adsense, :root div[data-contentexchange-widget], :root div[data-alias="300x250 Ad 2"], :root div[data-adzone], :root div[data-adunit-path], :root div[data-adname], :root div[data-ad-targeting], :root div[data-ad-placeholder], :root div[aria-label="Ads"], :root display-ads, :root display-ad-component, :root atf-ad-slot, :root aside[id^="adrotate_widgets-"], :root amp-fx-flying-carpet, :root amp-embed[type="taboola"], :root amp-connatix-player, :root amp-ad-custom, :root amp-ad, :root div[id^="google_dfp_"], :root ad-slot, :root ad-shield-ads, :root a[style="width:100%;height:100%;z-index:10000000000000000;position:absolute;top:0;left:0;"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"] + .ob_source, :root a[href^="https://xbet-4.com/"], :root div[id^="ad-position-"], :root a[href^="https://www.toprevenuegate.com/"], :root a[href^="https://www.purevpn.com/"][href*="&utm_source=aff-"], :root a[href^="https://www.privateinternetaccess.com/"] > img, :root a[href^="https://www.onlineusershielder.com/"], :root a[href^="https://www.liquidfire.mobi/"], :root a[href^="https://www.infowarsstore.com/"] > img, :root a[href^="https://www.highperformancecpmgate.com/"], :root a[href^="https://www.highcpmrevenuenetwork.com/"], :root a[href^="https://lnkxt.bannerator.com/"], :root a[href^="https://www.geekbuying.com/dynamic-ads/"], :root a[href^="https://www.financeads.net/tc.php?"], :root a[href^="https://www.effectiveratecpm.com/"], :root [href^="https://www.herbanomic.com/"] > img, :root a[href^="https://maymooth-stopic.com/"], :root a[href^="https://www.dql2clk.com/"], :root a[href^="https://www.nutaku.net/signup/landing/"], :root a[href^="https://www.dating-finder.com/signup/?ai_d="], :root a[href^="https://explore-site.com/"], :root a[href^="https://www.brazzersnetwork.com/landing/"], :root a[href^="https://www.adxsrve.com/"], :root [data-template-type="nativead"], :root a[href^="https://www.endorico.com/Smartlink/"], :root a[href^="https://www.adultempire.com/"][href*="?partner_id="], :root a[href^="https://voluum.prom-xcams.com/"], :root div[data-type="_mgwidget"]:not(.eyeo), :root a[href^="https://twinrdsrv.com/"], :root a[href^="https://trk.nfl-online-streams.club/"], :root a[href^="https://tracking.avapartner.com/"], :root a[href^="https://track.wg-aff.com"], :root a[href^="https://track.ultravpn.com/"], :root a[href^="https://track.afcpatrk.com/"], :root a[href^="https://torguard.net/aff.php"] > img, :root [data-identity="adhesive-ad"], :root a[href^="https://tc.tradetracker.net/"] > img, :root a[href^="https://tatrck.com/"], :root a[href^="https://click.candyoffers.com/"], :root [href^="https://zstacklife.com/"] img, :root a[href^="https://t.aslnk.link/"], :root a[href^="https://t.adating.link/"], :root a[href^="https://t.acam.link/"], :root a[href*="//daichoho.com/"], :root a[href^="https://syndication.optimizesrv.com/"], :root a[href^="https://go.trackitalltheway.com/"], :root [href^="https://track.fiverr.com/visit/"] > img, :root a[href^="https://syndication.exoclick.com/"], :root a[href^="https://syndication.dynsrvtbg.com/"], :root div[data-alias="300x250 Ad 1"], :root a[href^="https://syndicate.contentsserved.com/"], :root a[href^="https://svb-analytics.trackerrr.com/"], :root a[href^="https://ad.doubleclick.net/"], :root a[href^="https://static.fleshlight.com/images/banners/"], :root a[href^="https://slkmis.com/"], :root bottomadblock, :root a[href^="https://s.zlinkd.com/"], :root a[href^="https://s.zlink3.com/"], :root a[href^="https://www.mrskin.com/account/"], :root a[href^="https://s.optzsrv.com/"], :root a[href^="https://s.ma3ion.com/"], :root #kt_player > div[style$="display: block;"][style*="inset: 0px;"], :root [href$="/sexdating.php"], :root a[href^="https://quotationfirearmrevision.com/"], :root a[href^="https://pubads.g.doubleclick.net/"], :root a[href^="https://ak.oalsauwy.net/"], :root a[href^="https://softwa.cfd/"], :root a[href^="https://play1ad.shop/"], :root a[href^="https://prf.hn/click/"][href*="/camref:"] > img, :root a[href^="https://www.dating-finder.com/?ai_d="], :root a[href^="https://serve.awmdelivery.com/"], :root a[href^="https://prf.hn/click/"][href*="/adref:"] > img, :root app-ad, :root [href^="https://ap.octopuspop.com/click/"] > img, :root a[href^="https://postback1win.com/"], :root a[href^="https://mmwebhandler.aff-online.com/"], :root a[href^="https://www.bet365.com/"][href*="affiliate="], :root a[href^="https://pb-track.com/"], :root a[href^="https://pb-front.com/"], :root a[href^="https://paid.outbrain.com/network/redir?"], :root a[href^="https://streamate.com/landing/click/"], :root div[class^="Adstyled__AdWrapper-"], :root a[href^="https://osfultrbriolenai.info/"], :root a[href^="https://upsups.click/"], :root a[href^="https://ndt5.net/"], :root a[href^="http://eighteenderived.com/"], :root a[href^="https://natour.naughtyamerica.com/track/"], :root a[href^="https://mediaserver.entainpartners.com/renderBanner.do?"], :root a[href^="https://m.do.co/c/"] > img, :root .nya-slot[style], :root a[href^="https://a.bestcontentweb.top/"], :root a[href^="https://lobimax.com/"], :root a[href^="https://lead1.pl/"], :root a[href^="https://landing.brazzersnetwork.com/"], :root a[href^="https://join.virtuallust3d.com/"], :root a[href^="https://kiksajex.com/"], :root a[href^="https://juicyads.in/"], :root a[href^="https://snowdayonline.xyz/"], :root a[href^="https://mediaserver.gvcaffiliates.com/renderBanner.do?"], :root a[href^="https://join.dreamsexworld.com/"], :root a[href^="https://jaxofuna.com/"], :root a[href^="https://italarizege.xyz/"], :root a[href^="https://iqbroker.com/"][href*="?aff="], :root a[href^="https://identicaldrench.com/"], :root a[href^="https://hot-growngames.life/"], :root a[href^="https://helmethomicidal.com/"], :root a[href^="https://golinks.work/"], :root ark-top-ad, :root a[href^="https://s.zlinkn.com/"], :root a[href^="https://go.xxxvjmp.com/"], :root [class^="tile-picker__CitrusBannerContainer-sc-"], :root a[href^="https://go.xxxiijmp.com"], :root a[href^="https://go.xtbaffiliates.com/"], :root [data-role="tile-ads-module"], :root a[href^="https://go.xlviirdr.com"], :root a[href^="https://go.xlviiirdr.com"], :root a[href^="https://ismlks.com/"], :root [href^="https://www.mypillow.com/"] > img, :root a[href^="https://go.xlirdr.com"], :root [data-css-class="dfp-inarticle"], :root a[href^="https://l.hyenadata.com/"], :root a[href^="https://go.tmrjmp.com"], :root a[href^="https://zirdough.net/"], :root a[href^="https://s.deltraff.com/"], :root a[href^="https://go.markets.com/visit/?bta="], :root a[href^="https://billing.purevpn.com/aff.php"] > img, :root a[href^="https://go.hpyrdr.com/"], :root a[href^="https://lijavaxa.com/"], :root a[href^="https://go.goaserv.com/"], :root a[href^="https://t.hrtye.com/"], :root a[href^="https://go.etoro.com/"] > img, :root a[href^="https://go.dmzjmp.com"], :root a[href^="https://www.bang.com/?aff="], :root #mgb-container > #mgb, :root a[href^="https://go.admjmp.com"], :root a[href^="https://ak.stikroltiltoowi.net/"], :root a[href^="https://get.surfshark.net/aff_c?"][href*="&aff_id="] > img, :root a[href^="https://www.mrskin.com/tour"], :root a[href^="https://financeads.net/tc.php?"], :root a[href^="https://www.adskeeper.com"], :root a[data-redirect^="https://paid.outbrain.com/network/redir?"], :root [href^="https://clicks.affstrack.com/"] > img, :root a[href^="https://ak.hauchiwu.com/"], :root a[href^="https://engine.phn.doublepimp.com/"], :root a[href^="https://engine.blueistheneworanges.com/"], :root a[href^="https://drumskilxoa.click/"], :root a[href^="https://dl-protect.net/"], :root a[href^="https://rixofa.com/"], :root #ads[style^="position: absolute; z-index: 30; width: 100%; height"], :root a[href^="https://disobediencecalculatormaiden.com/"], :root a[href*=".foxqck.com/"], :root a[href^="https://ctosrd.com/"], :root div[id*="ScriptRoot"]:not(.eyeo), :root a[href^="https://clixtrac.com/"], :root [href^="https://noqreport.com/"] > img, :root a[href^="https://clicks.pipaffiliates.com/"], :root app-advertisement, :root a[href^="https://getmatchedlocally.com/"], :root a[href^="https://clickins.slixa.com/"], :root a[href^="https://datewhisper.life/"], :root a[href^="https://get-link.xyz/"], :root a[href^="https://click.linksynergy.com/fs-bin/"] > img, :root a[href^="https://combodef.com/"], :root a[href^="https://click.hoolig.app/"], :root a[href^="https://click.ggpickaff.com/"], :root a[href^="https://track.totalav.com/"], :root a[href^="https://ctrdwm.com/"], :root img[src^="https://images.purevpnaffiliates.com"], :root a[href^="https://porntubemate.com/"], :root a[href^="https://clickadilla.com/"], :root a[href^="https://click.dtiserv2.com/"], :root a[href^="https://go.xlvirdr.com"], :root a[href^="http://www.iyalc.com/"], :root a[href^="https://claring-loccelkin.com/"], :root a[href^="https://bongacams2.com/track?"], :root a[href^="https://t.ajrkm1.com/"], :root [href="https://masstortfinancing.com"] img, :root a[href^="https://bongacams10.com/track?"], :root a[href^="https://www.sheetmusicplus.com/"][href*="?aff_id="], :root a[href^="https://bngpt.com/"], :root a[href^="https://black77854.com/"], :root a[href^="https://banners.livepartners.com/"], :root a[href^="https://myclick-2.com/"], :root a[href^="https://sexynearme.com/"], :root a[href^="https://baipahanoop.net/"], :root a[href^="http://revolvemockerycopper.com/"], :root a[href^="https://awptjmp.com/"], :root a[href^="https://join.sexworld3d.com/track/"], :root a[href^="https://aweptjmp.com/"], :root a[href^="https://ausoafab.net/"], :root a[href^="https://adclick.g.doubleclick.net/"], :root a[href^="https://bc.game/"], :root a[href^="https://a.bestcontentoperation.top/"], :root a[href^="https://adultfriendfinder.com/go/"], :root a[href^="https://ads.planetwin365affiliate.com/"], :root a[href^="https://ads.leovegas.com/"], :root a[href^="https://auesk.cfd/"], :root a[href^="https://a2.adform.net/"], :root a[href^="https://a.candyai.love/"], :root a[href^="https://playnano.online/offerwalls/?ref="], :root a[href^="https://a.adtng.com/"], :root .banner-img > .pbl, :root [data-m-ad-id], :root a[href^="https://a-ads.com/"], :root a[href^="https://ak.psaltauw.net/"], :root a[href^="https://1winpb.com/"], :root div[id^="rc-widget-"], :root a[href^="http://eslp34af.click/"], :root a[href^="https://turnstileunavailablesite.com/"], :root a[href^="https://chaturbate.com/in/?"], :root a[href^="https://prf.hn/click/"][href*="/creativeref:"] > img, :root a[href*="&maxads="], :root a[href^="http://www.adultempire.com/unlimited/promo?"][href*="&partner_id="], :root a[href^="https://1betandgonow.com/"], :root a[href^="https://eergortu.net/"], :root div[id^="optidigital-adslot"], :root a[href^="https://123-stream.org/"], :root a[href^="http://www.friendlyduck.com/AF_"], :root a[href^="https://allhost.shop/aff.php?"], :root [data-dynamic-ads], :root a[href^="http://vnte9urn.click/"], :root a[href^="https://getvideoz.click/"], :root a[href^="http://troopsassistedstupidity.com/"], :root a[href^="http://trk.globwo.online/"], :root a[href^="https://random-affiliate.atimaze.com/"], :root a-ad, :root a[href^="https://offhandpump.com/"], :root a[href^="http://stickingrepute.com/"], :root #slashboxes > .deals-rail, :root a[href^="http://roadcontagion.com/"], :root a[href^="http://premonitioninventdisagree.com/"], :root a[href^="http://naggingirresponsible.com/"], :root a[href^="https://in.rabbtrk.com/"], :root a[href^="http://www.h4trck.com/"], :root a[href^="https://81ac.xyz/"], :root a[href^="http://guestblackmail.com/"], :root a[href^="http://cam4com.go2cloud.org/aff_c?"], :root a[href^="https://ads.betfair.com/redirect.aspx?"], :root [href^="https://www.mypatriotsupply.com/"] > img, :root a[href^="https://trk.softonixs.xyz/"], :root a[href^="http://dragnag.com/"], :root a[href^="http://dragfault.com/"], :root [data-advadstrackid], :root a[href^="http://muzzlematrix.com/"], :root a[href^="https://track.adform.net/"], :root a[href^="http://avthelkp.net/"], :root a[href^="https://a.medfoodhome.com/"], :root a[href^="https://engine.flixtrial.com/"], :root [data-type="ad-vertical"], :root [data-taboola-options], :root a[href^="http://annulmentequitycereals.com/"], :root a[href^="//startgaming.net/tienda/" i], :root a[href^="https://www.get-express-vpn.com/offer/"], :root a[href^="https://s.cant3am.com/"], :root a[href^="//s.st1net.com/splash.php"], :root a[href^="https://join.virtualtaboo.com/track/"], :root [id^="ad_sky"], :root a[href^="http://coefficienttolerategravel.com/"], :root a[href^="https://a.medfoodsafety.com/"], :root a[href^="//go.eabids.com/"], :root a[href^="//ejitsirdosha.net/"], :root a[href^=" https://www.friendlyduck.com/AF_"], :root a[href*="/jump/next.php?r="], :root a[href^="https://go.rmishe.com/"], :root [href^="https://ilovemyfreedoms.com/landing-"], :root a[href^="https://go.nordvpn.net/aff"] > img, :root .\[\&_\.gdprAdTransparencyCogWheelButton\]\:\!pjra-z-\[5\], :root [href^="http://clicks.totemcash.com/"], :root a[href^="https://ad.zanox.com/ppc/"] > img, :root a[href^="https://lone-pack.com/"], :root [data-d-ad-id], :root a[href*=".engine.adglare.net/"], :root a[href^="https://t.ajrkm3.com/"], :root [href^="https://aads.com/campaigns/"], :root a[href^="//stighoazon.com/"], :root [href^="https://www.profitablegatecpm.com/"], :root div[id^="lazyad-"], :root a[href^="http://com-1.pro/"], :root a[href*=".cfm?domain="][href*="&fp="], :root [data-ad-name], :root a[href^="https://loboclick.com/"], :root a[data-url^="https://vulpix.bet/?ref="], :root a[href^="https://ab.advertiserurl.com/aff/"], :root a[data-oburl^="https://paid.outbrain.com/network/redir?"], :root a[href^="https://go.xlivrdr.com"], :root [onclick^="location.href='https://1337x.vpnonly.site/"], :root [name^="google_ads_iframe"], :root [id^="section-ad-banner"], :root a[href^="https://www.goldenfrog.com/vyprvpn?offer_id="][href*="&aff_id="], :root a[href*="//jjgirls.com/sex/Chaturbate"], :root [id^="ad-wrap-"], :root [href^="https://zone.gotrackier.com/"], :root a[href^="http://sarcasmadvisor.com/"], :root [href^="https://www.restoro.com/"], :root [href^="https://www.targetingpartner.com/"], :root .section-subheader > .section-hotel-prices-header, :root [href^="https://www.hostg.xyz/"] > img, :root a[href^="http://adultfriendfinder.com/go/"], :root a[href^="https://fastestvpn.com/lifetime-special-deal?a_aid="], :root a[href^="https://tour.mrskin.com/"], :root [href^="https://www.brighteonstore.com/products/"] img, :root citrus-ad-wrapper, :root a[href^="https://go.grinsbest.com/"], :root a[href^="https://vo2.qrlsx.com/"], :root [href^="https://www.avantlink.com/click.php"] img, :root [href^="https://wct.link/click?"], :root div[data-adunit], :root app-large-ad, :root [href^="https://turtlebids.irauctions.com/"] img, :root div[id^="div-ads-"], :root [href^="https://rapidgator.net/article/premium/ref/"], :root [href^="https://join.girlsoutwest.com/"], :root a[href^="https://activate-game.com/"], :root .scroll-fixable.rail-right > .deals-rail, :root [data-wpas-zoneid], :root a[href^="https://track.aftrk3.com/"], :root [href^="https://join3.bannedsextapes.com"], :root a[href^="https://bodelen.com/"], :root a[href*=".g2afse.com/"], :root div[id^="adngin-"], :root [data-rc-widget], :root span[data-ez-ph-id], :root [href^="https://track.aftrk1.com/"], :root [href^="https://join.playboyplus.com/track/"], :root a[href^="https://go.xxxijmp.com"], :root [href^="https://istlnkcl.com/"], :root a[href^="https://tm-offers.gamingadult.com/"], :root [href^="https://charmingdatings.life/"], :root [href^="https://glersakr.com/"], :root a[href^="https://a.bestcontentfood.top/"], :root [href^="https://cpa.10kfreesilver.com/"], :root [data-id^="div-gpt-ad"], :root a[href^="https://tracker.loropartners.com/"], :root [href^="https://awbbjmp.com/"], :root div[ow-ad-unit-wrapper], :root a[data-href^="http://ads.trafficjunky.net/"], :root a[href^="http://partners.etoro.com/"], :root a[href^="https://www.friendlyduck.com/AF_"], :root [href^="https://ad1.adfarm1.adition.com/"], :root a[href^="https://bngprm.com/"], :root [href^="https://shiftnetwork.infusionsoft.com/go/"] > img, :root a[href^="https://go.strpjmp.com/"], :root a[href^="https://go.bushheel.com/"], :root a[href^="https://ctjdwm.com/"], :root a[href^="https://camfapr.com/landing/click/"], :root div[data-ad-wrapper], :root .gnt_em_vp_c[data-g-s="vp_dk"], :root [href="//sexcams.plus/"], :root [href^="http://www.mypillow.com/"] > img, :root a[href^="https://promerycergerful.com/"], :root #kt_player > a[target="_blank"], :root a[href^="http://bongacams.com/track?"], :root [href^="http://mypillow.com/"] > img, :root [href="https://ourgoldguy.com/contact/"] img, :root a[href^="https://wittered-mainging.com/"], :root #teaser3[style="width: 100%;text-align: center;display: scroll;position:fixed;bottom: 0;margin: 0 auto;z-index: 103;"], :root [href="https://www.masstortfinancing.com/"] > img, :root .ob_container .item-container-obpd, :root [id^="div-gpt-ad"], :root a[href^="https://go.rmhfrtnd.com/"], :root [href="https://jdrucker.com/gold"] > img, :root .grid > .container > #aside-promotion, :root DFP-AD, :root [href^="https://go.xlrdr.com"], :root [data-testid^="taboola-"], :root a[href^="https://track.1234sd123.com/"], :root zeus-ad, :root [data-testid="prism-ad-wrapper"], :root [href^="https://ad.admitad.com/"], :root [href^="https://mypillow.com/"] > img, :root [data-testid="ad_testID"], :root [href^="https://antiagingbed.com/discount/"] > img, :root a[href*=".adsrv.eacdn.com/"], :root [href^="https://optimizedelite.com/"] > img, :root [data-name="adaptiveConstructorAd"], :root a[href^="https://go.cmtaffiliates.com/"], :root [data-testid="adBanner-wrapper"], :root [href^="https://mylead.global/stl/"] > img, :root [href^="https://mypatriotsupply.com/"] > img, :root a[href^="https://go.hpyjmp.com"], :root iframe[scrolling="no"][sandbox*="allow-popups allow-modals"][style^="width: 100%; height: 100%; border: none;"], :root [href^="https://mystore.com/"] > img, :root a[href^="https://believessway.com/"], :root div[class*="publift-widget-"]:has(.fuse-slot-sticky), :root a[href^="https://witnessjacket.com/"], :root [data-mobile-ad-id], :root [class^="amp-ad-"], :root a[href^="http://handgripvegetationhols.com/"], :root a[href^="https://go.bbrdbr.com"], :root a[href^="https://fc.lc/ref/"], :root [data-adshim], :root topadblock, :root a[href^="//s.zlinkd.com/"], :root #teaser1[style^="width:autopx;"], :root [href^="https://www.cloudways.com/en/?id"], :root [data-asg-ins], :root a[href^="https://gamingadlt.com/?offer="], :root [data-desktop-ad-id], :root [id^="ad_slider"], :root [data-adbridg-ad-class], :root #teaser3[style^="width:autopx;"], :root [data-adblockkey], :root [data-block-type="ad"], :root [data-ad-width], :root [onclick*="content.ad/"], :root [data-ad-manager-id], :root AMP-AD, :root [data-ad-cls], :root [data-ez-name], :root a[href^="https://go.mnaspm.com/"], :root a[href^="https://service.bv-aff-trx.com/"], :root a[href^="https://6-partner.com/"], :root [class^="s2nPlayer"], :root a[href^="https://traffdaq.com/"], :root [data-testid="commercial-label-taboola"], :root [class^="div-gpt-ad"], :root a[href^="http://tc.tradetracker.net/"] > img, :root a[href^="https://www8.smartadserver.com/"], :root a[href^="https://pb-imc.com/"], :root [href^="https://affiliate.fastcomet.com/"] > img, :root [class^="adDisplay-module"], :root [data-freestar-ad][id], :root AD-SLOT, :root a[href^="https://www.googleadservices.com/pagead/aclk?"] > img, :root [data-ad-module], :root a[href^="https://go.skinstrip.net"][href*="?campaignId="], :root #teaser2[style^="width:autopx;"], :root a[href^="https://ngineet.cfd/"], :root [data-revive-zoneid], :root a[href^="https://losingoldfry.com/"], :root div[id^="div-gpt-"], :root a[href^="https://gml-grp.com/"], :root .ob_dual_right > .ob_ads_header ~ .odb_div, :root a[href^="https://cam4com.go2cloud.org/"], :root a[href^="http://li.blogtrottr.com/click?"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"], :root a[href^="https://t.ajump1.com/"], :root a[href^="https://go.xxxjmp.com"], :root #leader-companion > a[href] { display: none !important; }</style><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/SpaceHeader-DCRJcsit.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCogFlat-C4b_Dshk.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCommunity-CfkT1iCZ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconList-m408jDqY.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconSpace-BZ7VUqD3.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconWarningFilled-DwgBpNdl.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/Popover-Ct1MDUXK.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/index-4q585lP4.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/FileBlob-7MRLQ6TG-BZSuca32.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/outclick-iHM0AKcC.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/SpaceHardwareBadgeInner-uQCTFjLX.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/Spaces-B2zfCn83.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconFan-BJ0dtgY7.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconSpinner-u2vc1NJe.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconSleeping-CPrUem1H.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconStop-BKAWBw7F.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/index-B2ZeFiDt.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconFlag-Bnv5lj-R.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/PrivateTag-DWCFEGIK.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/RepoTabs-Do8uyZ5g.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconHeart-DNM-Ac8b.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconHeartFilled-DBERotgl.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/UsersListModal-CmebGxZg.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/ModalBody-BSakqqTH.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/urlWatcher-DYf22YoQ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/FollowButton-Dh7DphnJ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconBell-BnxJktzp.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconBellWatching-C5aPJHOA.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconMerge-kZu9O67g.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/UserPopover-DtfvYHPU.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconUpvoteFilled-CoszQ7JO.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/LabelPro-CnoHeJ5W.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/OrgPopover-GWjly-1t.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconPeopleFilled-ZCQ2ykJj.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/RepoTitle-B4LJLPjU.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/CopyButton-IYbR6XPs.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/Tooltip-BuI_ewvK.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconDuplicate-Bppnhgvf.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/Tabs-D9tnGcX5.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconXet-DfDYKn3C.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/XetWaitListPopover-CQGxczOj.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCheckmark-hA2Hag2v.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconBellWarning-CwPGkSpA.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconEmbed-gBw4g2Ic.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/ModelOverview-BcYbUh-0.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/gguf-CS9oOPAE.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/RepoOverview-D_ldxbg-.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconDownload-CaVZlZTD.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/ResourceGroupTag-CwGp68px.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/Image--fMbKkrS.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconWarning-SO0UcAjU.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/PipelineIcon-DKbGSWDK.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconVisualQuestionAnswering-CqQeB9zZ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconTextGeneration-B5RoFWSJ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconLightning-CI9-8pCX.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/DatasetOverview-CYapi2Xc.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconEye-KOJUCmk8.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconRows-CSvoL9Xv.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconDataTable-c-wMdxJ0.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconKebabMenu-DtUHyjCO.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconRestart-z0yxUPta.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconUnlockOutline-BkOQEMR5.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconMute-Cu3_PlPB.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/CollectionOverview-DDrk6bov.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconUpvote-D9zrsBIu.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconDevMode-BbZQDk6V.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/handlers-CmejpAaZ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconLinkExternal-CqEEMoOY.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/MarkdownEditor-CVQcCnMt.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/CommitTabs-CVS1JhdK.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconImageFilled-JaJDlHre.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/UserAutocompleteMenu-DMl2UdWC.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/MarkdownContent-H53bHPvc.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/interceptImages-nKuGr649.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/MediaViewer-BnALijHO.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCaretLeft-CVO7MraJ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCaretRight-D98DQSkJ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCaretDown-CXWYmr2_.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/Media-DHp7jJPz.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/CloneInstructions-Ce5oT5Mw.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconInfo-o2frMdVt.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/Tags-BH298SyI.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconNotForAllEyes-CFVC1K7B.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/SpaceHardwareFlavor-BNxAauGU.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/ModalQuickLinks-Bx3ce-aa.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconPaperClip-CbXjtF9I.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/Spinner-CoTrR9uz.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/SpaceSecretSelector-_BImCSk-.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCreditCard-BZ9ofRP7.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/StripeCardUpdateForm-BRjEdsOg.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/BillingProducts-BETkCOdB.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/BillingPrepaidCreditsWaitlist-DkVHbxPQ.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconRocket--o2keQqY.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/DescriptionTooltip-G93c8iQh.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconKey-Upk2eOaf.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconVariable-CgiAAK3W.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCheckmarkFilled-C2gx0rUM.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/CollectionModal-r7g2iJh9.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/SpaceDevModeControls-Cblf1olq.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconVscode-B9atbUKF.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/index.browser-vcSNLBTf.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconCaretV2-Bml8YZhe.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconHuggingFace-DcetrcSu.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/SpacePageInner-BFUDwth7.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/PageColWrapper-DaZA67jM.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/PageGridWrapper-6D72jOwg.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/RepoDisabledModal-C_2KEqiT.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/IconGate-_LHbocJK.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/SpaceIframe-BtGJWJgs.js"><link rel="modulepreload" as="script" crossorigin="" href="/front/build/kube-e130e7f/iframeResizer-wl678Q7U.js"></head>
+<body class="flex flex-col min-h-dvh bg-white dark:bg-gray-950 text-black SpacePage">
+    <div class="flex min-h-dvh flex-col"><div class="SVELTE_HYDRATER contents" data-target="SystemThemeMonitor" data-props="{&quot;isLoggedIn&quot;:true}"></div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12 px-4">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">QuickBite</h3>
-                    <p class="text-gray-400">Food and groceries delivered to your door in minutes.</p>
-                    <div class="flex space-x-4 mt-4">
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Company</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Careers</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Press</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Support</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Download App</h4>
-                    <div class="space-y-3">
-                        <button class="flex items-center bg-black text-white px-4 py-2 rounded-md w-full">
-                            <i class="fab fa-apple text-2xl mr-2"></i>
-                            <div class="text-left">
-                                <div class="text-xs">Download on the</div>
-                                <div class="font-semibold">App Store</div>
-                            </div>
-                        </button>
-                        <button class="flex items-center bg-black text-white px-4 py-2 rounded-md w-full">
-                            <i class="fab fa-google-play text-2xl mr-2"></i>
-                            <div class="text-left">
-                                <div class="text-xs">Get it on</div>
-                                <div class="font-semibold">Google Play</div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>© 2023 QuickBite. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
-    <!-- Shopping Cart Sidebar -->
-    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto">
-        <div class="p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold">Your Cart</h2>
-                <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div id="cart-items" class="space-y-4">
-                <!-- Cart items will be added here dynamically -->
-                <div class="text-center py-8 text-gray-500" id="empty-cart-message">
-                    <i class="fas fa-shopping-cart text-4xl mb-2"></i>
-                    <p>Your cart is empty</p>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-200 mt-6 pt-4">
-                <div class="flex justify-between mb-2">
-                    <span class="text-gray-600">Subtotal</span>
-                    <span id="cart-subtotal" class="font-semibold">$0.00</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                    <span class="text-gray-600">Delivery Fee</span>
-                    <span id="delivery-fee" class="font-semibold">$2.99</span>
-                </div>
-                <div class="flex justify-between mb-4">
-                    <span class="text-gray-600">Tax</span>
-                    <span id="cart-tax" class="font-semibold">$0.00</span>
-                </div>
-                <div class="flex justify-between text-lg font-bold">
-                    <span>Total</span>
-                    <span id="cart-total">$0.00</span>
-                </div>
-                
-                <button id="checkout-btn" onclick="checkout()" class="w-full bg-indigo-600 text-white py-3 rounded-md mt-6 hover:bg-indigo-700 transition disabled:opacity-50" disabled>
-                    Proceed to Checkout
-                </button>
-            </div>
-        </div>
-    </div>
-    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleCart()"></div>
+<div class="SVELTE_HYDRATER contents" data-target="SpaceHeader" data-props="{&quot;activeTab&quot;:&quot;spaceApp&quot;,&quot;authLight&quot;:{&quot;csrfToken&quot;:&quot;eyJkYXRhIjp7ImV4cGlyYXRpb24iOjE3NDUxMzUyNzk2MzcsInVzZXJJZCI6IjY2MDE0NzIzYmRhNDdlOWJjZmQ5MDI0OCJ9LCJzaWduYXR1cmUiOiIzNTZhYjE4YmZhMDk4ZDM2Y2ZkNjg2MjI5ZGI2YzVhNGZiZDNjNzVlMTUzMTc5ZTExOTJmNTVjY2FjYzRmMTE2In0=&quot;,&quot;hasHfLevelAccess&quot;:false,&quot;u&quot;:{&quot;avatarUrl&quot;:&quot;/avatars/6176f6da38f039304755d96b7c057893.svg&quot;,&quot;isPro&quot;:false,&quot;orgs&quot;:[],&quot;user&quot;:&quot;SimpleSam&quot;,&quot;canPost&quot;:false,&quot;canHaveBilling&quot;:true,&quot;canCreateOrg&quot;:true,&quot;theme&quot;:&quot;light&quot;,&quot;notifications&quot;:{&quot;org_suggestions&quot;:false},&quot;hardwareItems&quot;:[],&quot;hardwareItemsPrivate&quot;:false,&quot;usage&quot;:{&quot;storage&quot;:{&quot;limit&quot;:100000000000,&quot;used&quot;:0,&quot;count&quot;:0,&quot;usedPrivate&quot;:0,&quot;usedPublic&quot;:0},&quot;inference&quot;:{&quot;usedNanoUsd&quot;:45267380,&quot;numRequests&quot;:3,&quot;providerDetails&quot;:[{&quot;provider&quot;:&quot;novita&quot;,&quot;numRequests&quot;:3,&quot;totalCostNanoUsd&quot;:45267380,&quot;totalDurationMs&quot;:1541204}],&quot;periodEnd&quot;:&quot;2025-04-30T23:59:59.999Z&quot;,&quot;periodStart&quot;:&quot;2025-04-01T00:00:00.000Z&quot;,&quot;includedNanoUsd&quot;:100000000,&quot;limitNanoUsd&quot;:100000000,&quot;lastUpdated&quot;:&quot;2025-04-19T07:47:58.986Z&quot;},&quot;zeroGpu&quot;:{&quot;base&quot;:300,&quot;current&quot;:300,&quot;lastUpdated&quot;:&quot;2025-04-19T07:47:58.986Z&quot;}},&quot;welcomeLinks&quot;:[]}},&quot;author&quot;:{&quot;_id&quot;:&quot;66014723bda47e9bcfd90248&quot;,&quot;avatarUrl&quot;:&quot;/avatars/6176f6da38f039304755d96b7c057893.svg&quot;,&quot;fullname&quot;:&quot;Samson Kipkorir Sang&quot;,&quot;name&quot;:&quot;SimpleSam&quot;,&quot;type&quot;:&quot;user&quot;,&quot;isPro&quot;:false,&quot;isHf&quot;:false,&quot;isHfAdmin&quot;:false,&quot;isMod&quot;:false},&quot;avatarUrl&quot;:&quot;/avatars/6176f6da38f039304755d96b7c057893.svg&quot;,&quot;canDisable&quot;:false,&quot;canReadRepoSettings&quot;:true,&quot;canWriteRepoSettings&quot;:true,&quot;canWrite&quot;:true,&quot;discussionsStats&quot;:{&quot;closed&quot;:0,&quot;open&quot;:0,&quot;total&quot;:0},&quot;query&quot;:{},&quot;space&quot;:{&quot;author&quot;:&quot;SimpleSam&quot;,&quot;colorFrom&quot;:&quot;blue&quot;,&quot;colorTo&quot;:&quot;purple&quot;,&quot;cardData&quot;:{&quot;title&quot;:&quot;grocery-app&quot;,&quot;emoji&quot;:&quot;🐳&quot;,&quot;colorFrom&quot;:&quot;blue&quot;,&quot;colorTo&quot;:&quot;purple&quot;,&quot;sdk&quot;:&quot;static&quot;,&quot;pinned&quot;:false,&quot;tags&quot;:[&quot;deepsite&quot;]},&quot;createdAt&quot;:&quot;2025-04-19T07:47:52.000Z&quot;,&quot;emoji&quot;:&quot;🐳&quot;,&quot;discussionsDisabled&quot;:false,&quot;duplicationDisabled&quot;:false,&quot;id&quot;:&quot;SimpleSam/grocery-app&quot;,&quot;isLikedByUser&quot;:false,&quot;watched&quot;:{&quot;isWatching&quot;:true,&quot;isMuted&quot;:false,&quot;mode&quot;:&quot;global&quot;},&quot;lastModified&quot;:&quot;2025-04-19T07:47:54.000Z&quot;,&quot;likes&quot;:0,&quot;pinned&quot;:false,&quot;private&quot;:false,&quot;gated&quot;:false,&quot;repoType&quot;:&quot;space&quot;,&quot;subdomain&quot;:&quot;simplesam-grocery-app&quot;,&quot;sdk&quot;:&quot;static&quot;,&quot;staticOrigin&quot;:&quot;index.html&quot;,&quot;title&quot;:&quot;grocery-app&quot;,&quot;runtime&quot;:{&quot;stage&quot;:&quot;RUNNING&quot;,&quot;hardware&quot;:{&quot;current&quot;:null,&quot;requested&quot;:null},&quot;storage&quot;:null,&quot;replicas&quot;:{&quot;requested&quot;:1,&quot;current&quot;:1}},&quot;iframe&quot;:{&quot;embedSrc&quot;:&quot;https://simplesam-grocery-app.static.hf.space&quot;,&quot;src&quot;:&quot;https://simplesam-grocery-app.static.hf.space/index.html&quot;},&quot;secrets&quot;:[],&quot;variables&quot;:[],&quot;sse&quot;:{&quot;url&quot;:&quot;https://api.hf.space/v1/SimpleSam/grocery-app&quot;,&quot;jwt&quot;:&quot;eyJhbGciOiJFZERTQSJ9.eyJyZWFkIjp0cnVlLCJwZXJtaXNzaW9ucyI6eyJyZXBvLmNvbnRlbnQucmVhZCI6dHJ1ZX0sIm9uQmVoYWxmT2YiOnsia2luZCI6InVzZXIiLCJfaWQiOiI2NjAxNDcyM2JkYTQ3ZTliY2ZkOTAyNDgiLCJ1c2VyIjoiU2ltcGxlU2FtIiwic2Vzc2lvbklkIjoiNjgwMTM2YTI5M2Y2ZWU5ZDdhNjA1YzE5In0sImlhdCI6MTc0NTA0ODg3OSwic3ViIjoiL3NwYWNlcy9TaW1wbGVTYW0vZ3JvY2VyeS1hcHAiLCJleHAiOjE3NDUxMzUyNzksImlzcyI6Imh0dHBzOi8vaHVnZ2luZ2ZhY2UuY28ifQ.urdB9P0CxR_PyNALTP35ykvuo133W6xEtPffYGjR2sjjqH24KW-ppKpBooZygmNw1qkcpdUi6NWZd_dpA0JrBw&quot;},&quot;linkedModels&quot;:[],&quot;linkedDatasets&quot;:[],&quot;linkedCollections&quot;:[],&quot;sha&quot;:&quot;0ba060b1d5c587ceb53698a44c3c12cfe97587a6&quot;,&quot;hasBlockedOids&quot;:false,&quot;region&quot;:&quot;us&quot;,&quot;xetEnabled&quot;:false},&quot;u&quot;:{&quot;avatarUrl&quot;:&quot;/avatars/6176f6da38f039304755d96b7c057893.svg&quot;,&quot;isPro&quot;:false,&quot;fullname&quot;:&quot;Samson Kipkorir Sang&quot;,&quot;user&quot;:&quot;SimpleSam&quot;,&quot;orgs&quot;:[],&quot;signup&quot;:{&quot;github&quot;:&quot;SImpleSamson&quot;,&quot;homepage&quot;:&quot;http://www.ilakir.com&quot;,&quot;twitter&quot;:&quot;SolutionsAires&quot;},&quot;isHf&quot;:false,&quot;isMod&quot;:false,&quot;type&quot;:&quot;user&quot;,&quot;canPay&quot;:false,&quot;spacesAvailableFlavors&quot;:[&quot;cpu-basic&quot;,&quot;cpu-upgrade&quot;,&quot;zero-a10g&quot;,&quot;t4-small&quot;,&quot;t4-medium&quot;,&quot;l4x1&quot;,&quot;l4x4&quot;,&quot;l40sx1&quot;,&quot;l40sx4&quot;,&quot;l40sx8&quot;,&quot;a10g-small&quot;,&quot;a10g-large&quot;,&quot;a10g-largex2&quot;,&quot;a10g-largex4&quot;,&quot;a100-large&quot;],&quot;canPost&quot;:false},&quot;unreadNotifications&quot;:0,&quot;sessionUuid&quot;:&quot;LGzUdihggjVxo1h6euVP-&quot;}"><header class="from-gray-50-to-white bg-linear-to-t relative z-40 border-b border-gray-100 via-white pt-0.5 dark:via-gray-950"> </header>         </div>
 
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="fixed inset-0 flex items-center justify-center z-50 modal modal-hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold" id="auth-modal-title">Login</h2>
-                    <button onclick="toggleAuthModal()" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <div id="login-form">
-                    <div class="mb-4">
-                        <label for="login-email" class="block text-gray-700 mb-2">Email</label>
-                        <input type="email" id="login-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="mb-6">
-                        <label for="login-password" class="block text-gray-700 mb-2">Password</label>
-                        <input type="password" id="login-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <button onclick="login()" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition">Login</button>
-                    <p class="text-center mt-4 text-gray-600">
-                        Don't have an account? 
-                        <button onclick="showRegisterForm()" class="text-indigo-600 hover:underline">Register</button>
-                    </p>
-                </div>
-                
-                <div id="register-form" class="hidden">
-                    <div class="mb-4">
-                        <label for="register-name" class="block text-gray-700 mb-2">Full Name</label>
-                        <input type="text" id="register-name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="register-email" class="block text-gray-700 mb-2">Email</label>
-                        <input type="email" id="register-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="mb-4">
-                        <label for="register-password" class="block text-gray-700 mb-2">Password</label>
-                        <input type="password" id="register-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="mb-6">
-                        <label for="register-confirm-password" class="block text-gray-700 mb-2">Confirm Password</label>
-                        <input type="password" id="register-confirm-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <button onclick="register()" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition">Register</button>
-                    <p class="text-center mt-4 text-gray-600">
-                        Already have an account? 
-                        <button onclick="showLoginForm()" class="text-indigo-600 hover:underline">Login</button>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="auth-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleAuthModal()"></div>
 
-    <!-- Checkout Modal -->
-    <div id="checkout-modal" class="fixed inset-0 flex items-center justify-center z-50 modal modal-hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold">Checkout</h2>
-                    <button onclick="closeCheckoutModal()" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <div class="mb-6">
-                    <h3 class="font-semibold mb-2">Delivery Address</h3>
-                    <div class="flex items-center space-x-2 mb-2">
-                        <input type="radio" id="home-address" name="address" checked>
-                        <label for="home-address">Home: 123 Main St, Apt 4B, New York, NY 10001</label>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="radio" id="work-address" name="address">
-                        <label for="work-address">Work: 456 Business Ave, Floor 12, New York, NY 10005</label>
-                    </div>
-                    <button class="text-indigo-600 text-sm mt-2 hover:underline">Add new address</button>
-                </div>
-                
-                <div class="mb-6">
-                    <h3 class="font-semibold mb-2">Delivery Time</h3>
-                    <select class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option>ASAP (20-30 min)</option>
-                        <option>Schedule for later</option>
-                    </select>
-                </div>
-                
-                <div class="mb-6">
-                    <h3 class="font-semibold mb-2">Delivery Instructions</h3>
-                    <textarea class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Add delivery instructions (optional)"></textarea>
-                </div>
-                
-                <div class="mb-6">
-                    <h3 class="font-semibold mb-2">Payment Method</h3>
-                    <div class="space-y-2">
-                        <div class="flex items-center space-x-2 p-3 border border-gray-300 rounded-md">
-                            <input type="radio" id="credit-card" name="payment" checked>
-                            <label for="credit-card" class="flex-1">Credit/Debit Card</label>
-                            <i class="fab fa-cc-visa text-2xl text-blue-800"></i>
-                            <i class="fab fa-cc-mastercard text-2xl text-red-600"></i>
-                        </div>
-                        <div class="flex items-center space-x-2 p-3 border border-gray-300 rounded-md">
-                            <input type="radio" id="paypal" name="payment">
-                            <label for="paypal" class="flex-1">PayPal</label>
-                            <i class="fab fa-paypal text-2xl text-blue-700"></i>
-                        </div>
-                        <div class="flex items-center space-x-2 p-3 border border-gray-300 rounded-md">
-                            <input type="radio" id="apple-pay" name="payment">
-                            <label for="apple-pay" class="flex-1">Apple Pay</label>
-                            <i class="fab fa-apple text-2xl"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="border-t border-gray-200 pt-4 mb-6">
-                    <div class="flex justify-between mb-2">
-                        <span class="text-gray-600">Subtotal</span>
-                        <span id="checkout-subtotal" class="font-semibold">$0.00</span>
-                    </div>
-                    <div class="flex justify-between mb-2">
-                        <span class="text-gray-600">Delivery Fee</span>
-                        <span id="checkout-delivery" class="font-semibold">$2.99</span>
-                    </div>
-                    <div class="flex justify-between mb-2">
-                        <span class="text-gray-600">Tax</span>
-                        <span id="checkout-tax" class="font-semibold">$0.00</span>
-                    </div>
-                    <div class="flex justify-between text-lg font-bold">
-                        <span>Total</span>
-                        <span id="checkout-total">$0.00</span>
-                    </div>
-                </div>
-                
-                <button onclick="placeOrder()" class="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition">
-                    Place Order
-                </button>
-            </div>
-        </div>
-    </div>
-    <div id="checkout-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="closeCheckoutModal()"></div>
 
-    <!-- Order Confirmation Modal -->
-    <div id="confirmation-modal" class="fixed inset-0 flex items-center justify-center z-50 modal modal-hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 text-center p-8">
-            <div class="mb-6">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-check text-green-600 text-2xl"></i>
-                </div>
-                <h2 class="text-2xl font-bold mb-2">Order Confirmed!</h2>
-                <p class="text-gray-600">Your order has been placed successfully.</p>
-            </div>
-            
-            <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                <div class="flex justify-between mb-2">
-                    <span class="text-gray-600">Order #</span>
-                    <span class="font-semibold">QB-284759</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                    <span class="text-gray-600">Estimated Delivery</span>
-                    <span class="font-semibold">25-35 minutes</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Total</span>
-                    <span class="font-semibold" id="confirmation-total">$0.00</span>
-                </div>
-            </div>
-            
-            <button onclick="closeConfirmationModal()" class="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition">
-                Track My Order
-            </button>
-        </div>
-    </div>
-    <div id="confirmation-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="closeConfirmationModal()"></div>
+<div class="SVELTE_HYDRATER contents" data-target="SSOBanner" data-props="{&quot;organizations&quot;:[]}"></div>
+
+
+
+<main class="flex flex-1 flex-col">
+
+
+
+<div class="SVELTE_HYDRATER contents" data-target="SpacePageInner" data-props="{&quot;authLight&quot;:{&quot;csrfToken&quot;:&quot;eyJkYXRhIjp7ImV4cGlyYXRpb24iOjE3NDUxMzUyNzk2MzcsInVzZXJJZCI6IjY2MDE0NzIzYmRhNDdlOWJjZmQ5MDI0OCJ9LCJzaWduYXR1cmUiOiIzNTZhYjE4YmZhMDk4ZDM2Y2ZkNjg2MjI5ZGI2YzVhNGZiZDNjNzVlMTUzMTc5ZTExOTJmNTVjY2FjYzRmMTE2In0=&quot;,&quot;hasHfLevelAccess&quot;:false,&quot;u&quot;:{&quot;avatarUrl&quot;:&quot;/avatars/6176f6da38f039304755d96b7c057893.svg&quot;,&quot;isPro&quot;:false,&quot;orgs&quot;:[],&quot;user&quot;:&quot;SimpleSam&quot;,&quot;canPost&quot;:false,&quot;canHaveBilling&quot;:true,&quot;canCreateOrg&quot;:true,&quot;theme&quot;:&quot;light&quot;,&quot;notifications&quot;:{&quot;org_suggestions&quot;:false},&quot;hardwareItems&quot;:[],&quot;hardwareItemsPrivate&quot;:false,&quot;usage&quot;:{&quot;storage&quot;:{&quot;limit&quot;:100000000000,&quot;used&quot;:0,&quot;count&quot;:0,&quot;usedPrivate&quot;:0,&quot;usedPublic&quot;:0},&quot;inference&quot;:{&quot;usedNanoUsd&quot;:45267380,&quot;numRequests&quot;:3,&quot;providerDetails&quot;:[{&quot;provider&quot;:&quot;novita&quot;,&quot;numRequests&quot;:3,&quot;totalCostNanoUsd&quot;:45267380,&quot;totalDurationMs&quot;:1541204}],&quot;periodEnd&quot;:&quot;2025-04-30T23:59:59.999Z&quot;,&quot;periodStart&quot;:&quot;2025-04-01T00:00:00.000Z&quot;,&quot;includedNanoUsd&quot;:100000000,&quot;limitNanoUsd&quot;:100000000,&quot;lastUpdated&quot;:&quot;2025-04-19T07:47:58.986Z&quot;},&quot;zeroGpu&quot;:{&quot;base&quot;:300,&quot;current&quot;:300,&quot;lastUpdated&quot;:&quot;2025-04-19T07:47:58.986Z&quot;}},&quot;welcomeLinks&quot;:[]}},&quot;canRestart&quot;:true,&quot;canWrite&quot;:true,&quot;csrf&quot;:&quot;eyJkYXRhIjp7ImV4cGlyYXRpb24iOjE3NDUxMzUyNzk2MzcsInVzZXJJZCI6IjY2MDE0NzIzYmRhNDdlOWJjZmQ5MDI0OCJ9LCJzaWduYXR1cmUiOiIzNTZhYjE4YmZhMDk4ZDM2Y2ZkNjg2MjI5ZGI2YzVhNGZiZDNjNzVlMTUzMTc5ZTExOTJmNTVjY2FjYzRmMTE2In0=&quot;,&quot;hideNFAA&quot;:false,&quot;readmeTemplate&quot;:&quot;---\ntitle: {{title}}\nemoji: {{emoji}}\ncolorFrom: {{colorFrom}}\ncolorTo: {{colorTo}}\nsdk: {{sdk}}\nsdk_version: \&quot;{{sdkVersion}}\&quot;\napp_file: app.py\npinned: false\n---\n\nCheck out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference\n&quot;,&quot;space&quot;:{&quot;author&quot;:&quot;SimpleSam&quot;,&quot;colorFrom&quot;:&quot;blue&quot;,&quot;colorTo&quot;:&quot;purple&quot;,&quot;cardData&quot;:{&quot;title&quot;:&quot;grocery-app&quot;,&quot;emoji&quot;:&quot;🐳&quot;,&quot;colorFrom&quot;:&quot;blue&quot;,&quot;colorTo&quot;:&quot;purple&quot;,&quot;sdk&quot;:&quot;static&quot;,&quot;pinned&quot;:false,&quot;tags&quot;:[&quot;deepsite&quot;]},&quot;createdAt&quot;:&quot;2025-04-19T07:47:52.000Z&quot;,&quot;emoji&quot;:&quot;🐳&quot;,&quot;discussionsDisabled&quot;:false,&quot;duplicationDisabled&quot;:false,&quot;id&quot;:&quot;SimpleSam/grocery-app&quot;,&quot;isLikedByUser&quot;:false,&quot;watched&quot;:{&quot;isWatching&quot;:true,&quot;isMuted&quot;:false,&quot;mode&quot;:&quot;global&quot;},&quot;lastModified&quot;:&quot;2025-04-19T07:47:54.000Z&quot;,&quot;likes&quot;:0,&quot;pinned&quot;:false,&quot;private&quot;:false,&quot;gated&quot;:false,&quot;repoType&quot;:&quot;space&quot;,&quot;subdomain&quot;:&quot;simplesam-grocery-app&quot;,&quot;sdk&quot;:&quot;static&quot;,&quot;staticOrigin&quot;:&quot;index.html&quot;,&quot;title&quot;:&quot;grocery-app&quot;,&quot;runtime&quot;:{&quot;stage&quot;:&quot;RUNNING&quot;,&quot;hardware&quot;:{&quot;current&quot;:null,&quot;requested&quot;:null},&quot;storage&quot;:null,&quot;replicas&quot;:{&quot;requested&quot;:1,&quot;current&quot;:1}},&quot;iframe&quot;:{&quot;embedSrc&quot;:&quot;https://simplesam-grocery-app.static.hf.space&quot;,&quot;src&quot;:&quot;https://simplesam-grocery-app.static.hf.space/index.html&quot;},&quot;secrets&quot;:[],&quot;variables&quot;:[],&quot;sse&quot;:{&quot;url&quot;:&quot;https://api.hf.space/v1/SimpleSam/grocery-app&quot;,&quot;jwt&quot;:&quot;eyJhbGciOiJFZERTQSJ9.eyJyZWFkIjp0cnVlLCJwZXJtaXNzaW9ucyI6eyJyZXBvLmNvbnRlbnQucmVhZCI6dHJ1ZX0sIm9uQmVoYWxmT2YiOnsia2luZCI6InVzZXIiLCJfaWQiOiI2NjAxNDcyM2JkYTQ3ZTliY2ZkOTAyNDgiLCJ1c2VyIjoiU2ltcGxlU2FtIiwic2Vzc2lvbklkIjoiNjgwMTM2YTI5M2Y2ZWU5ZDdhNjA1YzE5In0sImlhdCI6MTc0NTA0ODg3OSwic3ViIjoiL3NwYWNlcy9TaW1wbGVTYW0vZ3JvY2VyeS1hcHAiLCJleHAiOjE3NDUxMzUyNzksImlzcyI6Imh0dHBzOi8vaHVnZ2luZ2ZhY2UuY28ifQ.urdB9P0CxR_PyNALTP35ykvuo133W6xEtPffYGjR2sjjqH24KW-ppKpBooZygmNw1qkcpdUi6NWZd_dpA0JrBw&quot;},&quot;linkedModels&quot;:[],&quot;linkedDatasets&quot;:[],&quot;linkedCollections&quot;:[],&quot;sha&quot;:&quot;0ba060b1d5c587ceb53698a44c3c12cfe97587a6&quot;,&quot;hasBlockedOids&quot;:false,&quot;region&quot;:&quot;us&quot;,&quot;xetEnabled&quot;:false},&quot;iframeSrc&quot;:&quot;https://simplesam-grocery-app.static.hf.space/index.html&quot;,&quot;showGettingStarted&quot;:false,&quot;sessionUuid&quot;:&quot;LGzUdihggjVxo1h6euVP-&quot;,&quot;isStaticHtmlAvailable&quot;:false,&quot;jwt&quot;:{&quot;token&quot;:&quot;eyJhbGciOiJFZERTQSJ9.eyJyZWFkIjp0cnVlLCJwZXJtaXNzaW9ucyI6eyJyZXBvLmNvbnRlbnQucmVhZCI6dHJ1ZX0sIm9uQmVoYWxmT2YiOnsia2luZCI6InVzZXIiLCJfaWQiOiI2NjAxNDcyM2JkYTQ3ZTliY2ZkOTAyNDgiLCJ1c2VyIjoiU2ltcGxlU2FtIiwiaXNQcm8iOmZhbHNlLCJpc0VudGVycHJpc2VNZW1iZXIiOmZhbHNlLCJzZXNzaW9uSWQiOiI2ODAxMzZhMjkzZjZlZTlkN2E2MDVjMTkifSwiaWF0IjoxNzQ1MDQ4ODc5LCJzdWIiOiIvc3BhY2VzL1NpbXBsZVNhbS9ncm9jZXJ5LWFwcCIsImV4cCI6MTc0NTA0OTA1OSwiaXNzIjoiaHR0cHM6Ly9odWdnaW5nZmFjZS5jbyJ9.eDnPLfYK-q-_XQfVrS29bOt16d4pSWsQJQxofALqW9Owd_8XtzMvUS_QUv5PLmBiFiNWvgwJiX1rbw8c0tiIAA&quot;,&quot;expiration&quot;:180000}}"> <div class="spinner-overlay fixed inset-0 flex h-full w-full items-center justify-center overflow-y-auto bg-gray-500 text-white opacity-80 hidden"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" fill="none" focusable="false" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span>Refreshing</span></div>  <iframe src="https://simplesam-grocery-app.static.hf.space/index.html" aria-label="static space app" class="space-iframe outline-hidden grow bg-white p-0" allow="accelerometer; ambient-light-sensor; autoplay; battery; camera; clipboard-read; clipboard-write; display-capture; document-domain; encrypted-media; fullscreen; geolocation; gyroscope; layout-animations; legacy-image-formats; magnetometer; microphone; midi; oversized-images; payment; picture-in-picture; publickey-credentials-get; sync-xhr; usb; vr ; wake-lock; xr-spatial-tracking" sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-storage-access-by-user-activation" scrolling="yes" id="iFrameResizer0" style="overflow: auto;"></iframe>  </div></main>
+
+</div>
 
     <script>
-        // Cart functionality
-        let cart = [];
-        let isLoggedIn = false;
-        let currentUser = null;
+        import("\/front\/build\/kube-e130e7f\/index.js");
+        window.moonSha = "kube-e130e7f\/";
+        window.__hf_deferred = {};
+    </script>
 
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-
-        // Shopping cart toggle
-        function toggleCart() {
-            const sidebar = document.getElementById('cart-sidebar');
-            const overlay = document.getElementById('cart-overlay');
-            sidebar.classList.toggle('translate-x-full');
-            overlay.classList.toggle('hidden');
-            
-            // Update cart totals when opening
-            if (!sidebar.classList.contains('translate-x-full')) {
-                updateCartTotals();
-            }
-        }
-
-        // Add item to cart
-        function addToCart(itemName, price, storeName) {
-            const item = {
-                id: Date.now(),
-                name: itemName,
-                price: price,
-                store: storeName,
-                quantity: 1
-            };
-            
-            cart.push(item);
-            updateCartUI();
-            updateCartCount();
-            
-            // Show cart if it's hidden
-            const sidebar = document.getElementById('cart-sidebar');
-            if (sidebar.classList.contains('translate-x-full')) {
-                toggleCart();
-            }
-        }
-
-        // Update cart item quantity
-        function updateQuantity(itemId, change) {
-            const itemIndex = cart.findIndex(item => item.id === itemId);
-            if (itemIndex !== -1) {
-                cart[itemIndex].quantity += change;
-                
-                // Remove item if quantity is 0 or less
-                if (cart[itemIndex].quantity <= 0) {
-                    cart.splice(itemIndex, 1);
-                }
-                
-                updateCartUI();
-                updateCartCount();
-            }
-        }
-
-        // Update cart UI
-        function updateCartUI() {
-            const cartItemsContainer = document.getElementById('cart-items');
-            const emptyCartMessage = document.getElementById('empty-cart-message');
-            
-            if (cart.length === 0) {
-                emptyCartMessage.classList.remove('hidden');
-                cartItemsContainer.innerHTML = '';
-                document.getElementById('checkout-btn').disabled = true;
-                return;
-            }
-            
-            emptyCartMessage.classList.add('hidden');
-            
-            let html = '';
-            cart.forEach(item => {
-                html += `
-                    <div class="cart-item-enter flex justify-between items-center p-3 bg-gray-50 rounded-md">
-                        <div>
-                            <h4 class="font-medium">${item.name}</h4>
-                            <p class="text-sm text-gray-600">${item.store}</p>
-                            <div class="flex items-center mt-2">
-                                <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-md hover:bg-gray-300">
-                                    <i class="fas fa-minus text-xs"></i>
-                                </button>
-                                <span class="mx-2">${item.quantity}</span>
-                                <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-md hover:bg-gray-300">
-                                    <i class="fas fa-plus text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-semibold">$${(item.price * item.quantity).toFixed(2)}</p>
-                            <button onclick="removeItem(${item.id})" class="text-red-500 text-sm hover:text-red-700 mt-1">
-                                <i class="fas fa-trash-alt"></i> Remove
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            cartItemsContainer.innerHTML = html;
-            document.getElementById('checkout-btn').disabled = false;
-        }
-
-        // Remove item from cart
-        function removeItem(itemId) {
-            cart = cart.filter(item => item.id !== itemId);
-            updateCartUI();
-            updateCartCount();
-        }
-
-        // Update cart count in navbar
-        function updateCartCount() {
-            const count = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cart-count').textContent = count;
-        }
-
-        // Update cart totals
-        function updateCartTotals() {
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const tax = subtotal * 0.08; // 8% tax
-            const deliveryFee = 2.99;
-            const total = subtotal + tax + deliveryFee;
-            
-            document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('cart-tax').textContent = `$${tax.toFixed(2)}`;
-            document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
-            
-            // Also update checkout modal totals if open
-            if (!document.getElementById('checkout-modal').classList.contains('modal-hidden')) {
-                document.getElementById('checkout-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-                document.getElementById('checkout-tax').textContent = `$${tax.toFixed(2)}`;
-                document.getElementById('checkout-total').textContent = `$${total.toFixed(2)}`;
-            }
-        }
-
-        // Auth modal toggle
-        function toggleAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            const overlay = document.getElementById('auth-overlay');
-            modal.classList.toggle('modal-hidden');
-            overlay.classList.toggle('hidden');
-        }
-
-        // Show register form
-        function showRegisterForm() {
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('register-form').classList.remove('hidden');
-            document.getElementById('auth-modal-title').textContent = 'Register';
-        }
-
-        // Show login form
-        function showLoginForm() {
-            document.getElementById('register-form').classList.add('hidden');
-            document.getElementById('login-form').classList.remove('hidden');
-            document.getElementById('auth-modal-title').textContent = 'Login';
-        }
-
-        // Login function
-        function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            if (!email || !password) {
-                alert('Please enter both email and password');
-                return;
-            }
-            
-            // In a real app, you would validate credentials with a backend
-            isLoggedIn = true;
-            currentUser = {
-                email: email,
-                name: 'User Name' // This would come from backend in a real app
-            };
-            
-            document.getElementById('auth-btn').textContent = 'My Account';
-            toggleAuthModal();
-            
-            // Clear form fields
-            document.getElementById('login-email').value = '';
-            document.getElementById('login-password').value = '';
-        }
-
-        // Register function
-        function register() {
-            const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-confirm-password').value;
-            
-            if (!name || !email || !password || !confirmPassword) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
-            
-            // In a real app, you would send this data to a backend
-            isLoggedIn = true;
-            currentUser = {
-                email: email,
-                name: name
-            };
-            
-            document.getElementById('auth-btn').textContent = 'My Account';
-            toggleAuthModal();
-            
-            // Clear form fields
-            document.getElementById('register-name').value = '';
-            document.getElementById('register-email').value = '';
-            document.getElementById('register-password').value = '';
-            document.getElementById('register-confirm-password').value = '';
-            
-            // Switch back to login form for next time
-            showLoginForm();
-        }
-
-        // Checkout function
-        function checkout() {
-            if (!isLoggedIn) {
-                toggleAuthModal();
-                return;
-            }
-            
-            updateCartTotals();
-            
-            // Also update checkout modal totals
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const tax = subtotal * 0.08;
-            const deliveryFee = 2.99;
-            const total = subtotal + tax + deliveryFee;
-            
-            document.getElementById('checkout-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('checkout-tax').textContent = `$${tax.toFixed(2)}`;
-            document.getElementById('checkout-total').textContent = `$${total.toFixed(2)}`;
-            
-            // Show checkout modal
-            const modal = document.getElementById('checkout-modal');
-            const overlay = document.getElementById('checkout-overlay');
-            modal.classList.remove('modal-hidden');
-            overlay.classList.remove('hidden');
-        }
-
-        // Close checkout modal
-        function closeCheckoutModal() {
-            const modal = document.getElementById('checkout-modal');
-            const overlay = document.getElementById('checkout-overlay');
-            modal.classList.add('modal-hidden');
-            overlay.classList.add('hidden');
-        }
-
-        // Place order function
-        function placeOrder() {
-            // In a real app, you would send the order to a backend
-            closeCheckoutModal();
-            
-            // Update confirmation modal with order total
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const tax = subtotal * 0.08;
-            const deliveryFee = 2.99;
-            const total = subtotal + tax + deliveryFee;
-            
-            document.getElementById('confirmation-total').textContent = `$${total.toFixed(2)}`;
-            
-            // Show confirmation modal
-            const modal = document.getElementById('confirmation-modal');
-            const overlay = document.getElementById('confirmation-overlay');
-            modal.classList.remove('modal-hidden');
-            overlay.classList.remove('hidden');
-            
-            // Clear cart
-            cart = [];
-            updateCartUI();
-            updateCartCount();
-        }
-
-        // Close confirmation modal
-        function closeConfirmationModal() {
-            const modal = document.getElementById('confirmation-modal');
-            const overlay = document.getElementById('confirmation-overlay');
-            modal.classList.add('modal-hidden');
-            overlay.classList.add('hidden');
+    <!-- Stripe -->
+    <script>
+        if (["hf.co", "huggingface.co"].includes(window.location.hostname)) {
+            const script = document.createElement("script");
+            script.src = "https://js.stripe.com/v3/";
+            script.async = true;
+            document.head.appendChild(script);
         }
     </script>
-</body>
-</html>
+
+
+<iframe name="__privateStripeMetricsController0120" frameborder="0" allowtransparency="true" scrolling="no" role="presentation" allow="payment *" src="https://js.stripe.com/v3/m-outer-3437aaddcdf6922d623e172c2d6f9278.html#url=https%3A%2F%2Fhuggingface.co%2Fspaces%2FSimpleSam%2Fgrocery-app&amp;title=grocery-app%20-%20a%20Hugging%20Face%20Space%20by%20SimpleSam&amp;referrer=https%3A%2F%2Fenzostvs-deepsite.hf.space%2F&amp;muid=NA&amp;sid=NA&amp;version=6&amp;preview=false&amp;__shared_params__[version]=v3" aria-hidden="true" tabindex="-1" style="border: none !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; visibility: hidden !important; position: fixed !important; height: 1px !important; pointer-events: none !important; user-select: none !important;"></iframe></body></html>
